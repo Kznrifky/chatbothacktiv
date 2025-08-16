@@ -66,37 +66,40 @@ if prompt := st.chat_input("Apa yang ingin Anda tanyakan?"):
     with st.chat_message("user"):
         st.markdown(prompt)
     
-    # Menambahkan pesan pengguna ke riwayat (INI BAGIAN YANG DIPERBAIKI)
+    # Menambahkan pesan pengguna ke riwayat
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-# GANTI SELURUH BLOK try...except ANDA DENGAN INI
-try:
-    with st.spinner("Gema sedang mengetik..."):
-        response = st.session_state.chat.send_message(prompt, stream=False)
-    
-    # PENGECEKAN BARU: Pastikan respons dari AI tidak kosong
-    if response.text:
-        # JIKA RESPON ADA ISINYA:
-        response_text = response.text
+    # --- BLOK KODE YANG SUDAH DIPERBAIKI ---
+    try:
+        with st.spinner("Kzn sedang mengetik..."):
+            # Kirim prompt ke model dan tunggu respons lengkap
+            response = st.session_state.chat.send_message(prompt, stream=False)
         
-        # Tampilkan di UI
-        with st.chat_message("assistant"):
-            st.markdown(response_text)
-        
-        # Simpan ke riwayat
-        st.session_state.messages.append({"role": "assistant", "content": response_text})
-    else:
-        # JIKA RESPON KOSONG (karena filter keamanan, dll.):
-        fallback_response = "Maaf, saya tidak bisa memberikan respons untuk itu. Mungkin Anda bisa mencoba pertanyaan lain?"
-        
-        # Tampilkan pesan alternatif di UI
-        with st.chat_message("assistant"):
-            st.markdown(fallback_response)
-        
-        # PENTING: Jangan simpan respons kosong atau pesan alternatif ini ke riwayat
-        # agar tidak merusak percakapan selanjutnya.
+        # Cek apakah kandidat respons ada dan tidak kosong
+        if response and response.parts:
+            # Ambil teks dari bagian pertama respons
+            response_text = response.parts[0].text
+            
+            # Tampilkan di UI
+            with st.chat_message("assistant"):
+                st.markdown(response_text)
+            
+            # Simpan ke riwayat pesan untuk ditampilkan kembali
+            st.session_state.messages.append({"role": "assistant", "content": response_text})
+        else:
+            # JIKA RESPON KOSONG (karena filter keamanan atau masalah lain)
+            fallback_response = "Maaf, saya tidak dapat memberikan respons untuk itu. Coba pertanyaan lain."
+            
+            # Tampilkan pesan alternatif di UI
+            with st.chat_message("assistant"):
+                st.markdown(fallback_response)
+            
+            # PENTING: Jangan simpan respons kosong atau pesan alternatif ini ke riwayat
+            # agar tidak merusak percakapan selanjutnya.
 
-except Exception as e:
-    error_message = f"Maaf, terjadi masalah: {str(e)}"
-    st.error(error_message)
-    st.session_state.messages.append({"role": "assistant", "content": error_message})
+    except Exception as e:
+        # Menangani error teknis lainnya
+        error_message = f"Maaf, terjadi masalah teknis: {str(e)}"
+        st.error(error_message)
+        # Menambahkan pesan error ke UI agar pengguna tahu
+        st.session_state.messages.append({"role": "assistant", "content": error_message})
