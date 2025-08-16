@@ -69,21 +69,32 @@ if prompt := st.chat_input("Apa yang ingin Anda tanyakan?"):
     # Menambahkan pesan pengguna ke riwayat (INI BAGIAN YANG DIPERBAIKI)
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-   # SALIN DAN GANTI DENGAN KODE BARU INI
+# GANTI SELURUH BLOK try...except ANDA DENGAN INI
 try:
     with st.spinner("Gema sedang mengetik..."):
-        # Perubahan 1: Mengubah stream menjadi False agar lebih mudah ditangani
         response = st.session_state.chat.send_message(prompt, stream=False)
-
-    # Perubahan 2: Mengambil teksnya saja dari objek response
-    response_text = response.text
-
-    # Menampilkan respons yang sudah bersih di UI
-    with st.chat_message("assistant"):
-        st.markdown(response_text)
-
-    # Menambahkan respons teks yang bersih ke riwayat
-    st.session_state.messages.append({"role": "assistant", "content": response_text})
+    
+    # PENGECEKAN BARU: Pastikan respons dari AI tidak kosong
+    if response.text:
+        # JIKA RESPON ADA ISINYA:
+        response_text = response.text
+        
+        # Tampilkan di UI
+        with st.chat_message("assistant"):
+            st.markdown(response_text)
+        
+        # Simpan ke riwayat
+        st.session_state.messages.append({"role": "assistant", "content": response_text})
+    else:
+        # JIKA RESPON KOSONG (karena filter keamanan, dll.):
+        fallback_response = "Maaf, saya tidak bisa memberikan respons untuk itu. Mungkin Anda bisa mencoba pertanyaan lain?"
+        
+        # Tampilkan pesan alternatif di UI
+        with st.chat_message("assistant"):
+            st.markdown(fallback_response)
+        
+        # PENTING: Jangan simpan respons kosong atau pesan alternatif ini ke riwayat
+        # agar tidak merusak percakapan selanjutnya.
 
 except Exception as e:
     error_message = f"Maaf, terjadi masalah: {str(e)}"
