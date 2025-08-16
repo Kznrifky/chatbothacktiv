@@ -69,18 +69,23 @@ if prompt := st.chat_input("Apa yang ingin Anda tanyakan?"):
     # Menambahkan pesan pengguna ke riwayat (INI BAGIAN YANG DIPERBAIKI)
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-    # Mengirim prompt ke model dan menampilkan respons
-    try:
-        with st.spinner("Gema sedang mengetik..."):
-            response = st.session_state.chat.send_message(prompt, stream=True)
-            
-            with st.chat_message("assistant"):
-                full_response = st.write_stream(response)
+   # SALIN DAN GANTI DENGAN KODE BARU INI
+try:
+    with st.spinner("Gema sedang mengetik..."):
+        # Perubahan 1: Mengubah stream menjadi False agar lebih mudah ditangani
+        response = st.session_state.chat.send_message(prompt, stream=False)
 
-        # Menambahkan respons AI ke riwayat (INI JUGA DIPERBAIKI)
-        st.session_state.messages.append({"role": "assistant", "content": full_response})
+    # Perubahan 2: Mengambil teksnya saja dari objek response
+    response_text = response.text
 
-    except Exception as e:
-        error_message = f"Maaf, terjadi masalah: {str(e)}"
-        st.error(error_message)
-        st.session_state.messages.append({"role": "assistant", "content": error_message})
+    # Menampilkan respons yang sudah bersih di UI
+    with st.chat_message("assistant"):
+        st.markdown(response_text)
+
+    # Menambahkan respons teks yang bersih ke riwayat
+    st.session_state.messages.append({"role": "assistant", "content": response_text})
+
+except Exception as e:
+    error_message = f"Maaf, terjadi masalah: {str(e)}"
+    st.error(error_message)
+    st.session_state.messages.append({"role": "assistant", "content": error_message})
