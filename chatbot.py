@@ -25,7 +25,7 @@ if not api_key:
 # --- Inisialisasi Model Gemini ---
 try:
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-pro')
+    model = genai.GenerativeModel('gemini-1.5-flash')
 except Exception as e:
     st.error(f"Terjadi kesalahan saat mengkonfigurasi API. Pastikan API Key Anda valid. Detail: {e}")
     st.stop()
