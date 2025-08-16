@@ -3,13 +3,13 @@ import google.generativeai as genai
 
 
 st.set_page_config(
-    page_title="🤖 Gema ChatBot",
+    page_title="🤖 ChatBot",
     page_icon="🤖",
     layout="centered"
 )
 
-st.title("🤖 Gema ChatBot Cerdas")
-st.caption("Ditenagai oleh Google Gemini & Streamlit")
+st.title("🤖 Chatbot Kzn")
+st.caption("Based Google Gemini & Streamlit")
 
 st.sidebar.header("Pengaturan")
 try:
