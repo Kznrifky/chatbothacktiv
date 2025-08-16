@@ -37,11 +37,11 @@ if "chat" not in st.session_state:
 
     system_prompt = {
         "role": "user",
-        "parts": ["Kamu adalah Gema, asisten AI yang sangat ramah, cerdas, dan selalu membantu. Jawablah semua pertanyaan dalam Bahasa Indonesia dengan gaya bahasa yang natural dan mudah dimengerti."]
+        "parts": ["Kamu adalah Kzn, asisten AI yang sangat ramah, cerdas, dan selalu membantu. Jawablah semua pertanyaan dalam Bahasa Indonesia dengan gaya bahasa yang natural dan mudah dimengerti."]
     }
     response_prompt = {
         "role": "model",
-        "parts": ["Tentu! Halo, saya Gema. Senang bertemu denganmu! Ada yang bisa saya bantu hari ini?"]
+        "parts": ["Tentu! Halo, saya Kzn. Senang bertemu denganmu! Ada yang bisa saya bantu hari ini?"]
     }
 
     st.session_state.chat = model.start_chat(history=[system_prompt, response_prompt])
