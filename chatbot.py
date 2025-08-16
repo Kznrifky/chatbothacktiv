@@ -82,7 +82,9 @@ if prompt := st.chat_input("Apa yang ingin Anda tanyakan?"):
                 st.markdown(response_text)
 
             st.session_state.messages.append({"role": "assistant", "content": response_text})
-        else:    fallback_response = "Maaf, saya tidak dapat memberikan respons untuk itu. Coba pertanyaan lain."
+        else:
+            # JIKA RESPON KOSONG (karena filter keamanan atau masalah lain)
+            fallback_response = "Maaf, saya tidak dapat memberikan respons untuk itu. Coba pertanyaan lain."
             
             with st.chat_message("assistant"):
                 st.markdown(fallback_response)
